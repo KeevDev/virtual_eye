@@ -1,0 +1,22 @@
+services:
+api:
+build: .
+container_name: vision_tts_api
+ports:
+- "8000:8000"
+environment:
+# Tuning por entorno
+- ENABLE_YOLO=true
+- YOLO_MODEL=yolov8n.pt
+- ENABLE_DEPTH=false
+- TTS_ENGINE=pyttsx3
+- WS_MAX_FPS=3
+volumes:
+- ./:/app
+restart: unless-stopped
+# Si necesitas GPU más adelante (YOLO en CUDA), agregarías:
+# deploy:
+# resources:
+# reservations:
+# devices:
+# - capabilities: [gpu]

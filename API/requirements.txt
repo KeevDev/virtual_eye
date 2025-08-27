@@ -1,0 +1,16 @@
+# ── requirements.txt ──────────────────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+pillow==10.4.0
+numpy==2.1.1
+opencv-python==4.10.0.84
+pyttsx3==2.98
+# Opcional (detección de objetos):
+ultralytics==8.3.29
+# Opcional (profundidad monocular):
+timm==1.0.9
+torch>=2.2.0
+torchvision>=0.17.0
+# Si usarás proveedores externos de TTS (p.ej. ElevenLabs, Azure, etc.),
+# instala sus SDKs y añade variables de entorno correspondientes.
