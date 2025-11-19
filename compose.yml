@@ -1,22 +1,37 @@
+version: "3.9"
+
 services:
-api:
-build: .
-container_name: vision_tts_api
-ports:
-- "8000:8000"
-environment:
-# Tuning por entorno
-- ENABLE_YOLO=true
-- YOLO_MODEL=yolov8n.pt
-- ENABLE_DEPTH=false
-- TTS_ENGINE=pyttsx3
-- WS_MAX_FPS=3
-volumes:
-- ./:/app
-restart: unless-stopped
-# Si necesitas GPU más adelante (YOLO en CUDA), agregarías:
-# deploy:
-# resources:
-# reservations:
-# devices:
-# - capabilities: [gpu]
+  backend:
+    build:
+      context: ./API
+    container_name: virtual-eyes-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CAMERA_URL=http://10.56.90.145/capture
+    networks:
+      - virtualeyes_net
+    restart: always
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: virtual-eyes-frontend
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+      - "8081:8081"
+    environment:
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+      - BACKEND_URL=http://backend:8000   # 👈 Lo usas desde Expo
+    depends_on:
+      - backend
+    networks:
+      - virtualeyes_net
+    restart: always
+
+networks:
+  virtualeyes_net:
+    driver: bridge

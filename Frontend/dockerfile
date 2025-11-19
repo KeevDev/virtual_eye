@@ -1,0 +1,28 @@
+# Imagen base de Node
+FROM node:20-bullseye
+
+# Directorio de trabajo
+WORKDIR /app
+
+# Copiamos sólo package.json / lock para aprovechar caché
+COPY package*.json ./
+
+# Instalamos dependencias del proyecto
+RUN npm install
+
+# Instalamos Expo CLI (nueva versión usa "expo" en vez de "expo-cli")
+RUN npm install -g expo
+
+# Copiamos el resto del código
+COPY . .
+
+# Exponemos los puertos típicos de Expo / Metro
+EXPOSE 19000 19001 19002 8081
+
+# Variables útiles para que escuche en 0.0.0.0
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+ENV REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+
+# Comando por defecto: levantar el dev server de Expo
+# "--host 0.0.0.0" para que sea accesible desde fuera del contenedor
+CMD ["expo", "start", "--host", "0.0.0.0"]
